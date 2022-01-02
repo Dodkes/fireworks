@@ -1,0 +1,45 @@
+$sky-color: rgba(0, 0, 0, 1);
+$star-color: rgba(255, 255, 255, 1);
+$big-star: 5px;
+$mid-star: 2.5px;
+$small-star: 1px;
+$star-radius: 10px;
+
+*{
+    box-sizing: border-box;
+    margin:5px;
+}
+
+.big{
+    height: $big-star;
+    width: $big-star;
+}
+
+.mid{
+    height: $mid-star;
+    width: $mid-star;
+}
+
+.small{
+    height: $small-star;
+    width: $small-star;
+}
+
+body{
+    background-color: $sky-color;
+    color: $star-color;
+}
+
+.big, .mid, .small{
+    border-radius: $star-radius; 
+    background-color: $star-color;
+}
+
+#sky{
+    width: 100%;
+    height: 100%;
+}
+
+div{
+    background-color: red;
+}
