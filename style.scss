@@ -1,19 +1,18 @@
+//COLORS
 $sky-color: rgba(0, 0, 0, 1);
 $star-color: rgba(255, 255, 255, 1);
+//SIZES
 $big-star: 5px;
 $mid-star: 2.5px;
 $small-star: 1px;
 $star-radius: 10px;
+$screen-width: 100%;
+$screen-height: 100vh;
 
 *{
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-}
-
-.big{
-    height: $big-star;
-    width: $big-star;
 }
 
 .mid{
@@ -38,11 +37,19 @@ body{
 }
 
 #sky{
-    position: absolute;
-    height: 100vh;
-    width: 100%;
+    position: fixed;
+    height: $screen-height;
+    width: $screen-width;
 }
 
 #sky > div{
     position: relative;
+}
+
+svg{
+    position: relative;
+    height: 70vh;
+    width: 70%;
+    width: $screen-width;
+    height: $screen-height;
 }
