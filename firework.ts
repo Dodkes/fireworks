@@ -1,40 +1,33 @@
 const mySvg = document.querySelector('svg')
-const fireworkDots: number = 80 
+const fireworkDots: number = 90 //this should be used as animation - interval function
 let stringX: string
 let stringY: string
 let stringR: string
 let circles: SVGCircleElement[] = []
-
 let posX: number = 500
 let posY: number = 300
 
-fireworkLoop(2, 2)
-fireworkLoop(-2, -2)
-fireworkLoop(-2, 2)
-fireworkLoop(2, -2)
+createFirework(0, 2.8, '#ff66ff')
+createFirework(1.7, 2.5, '#ff66ff') //posledne pridane
+createFirework(2.8, 0 ,'#ffccff')
+createFirework(2, 2, '#ffe6ff')
+createFirework(2.5, 1, '#ffccff')
+createFirework(1, 2.5, '#ffe6ff')
 
-fireworkLoop(0, -2.8)
-fireworkLoop(0, 2.8)
-fireworkLoop(-2.8, 0)
-fireworkLoop(2.8, 0)
+function createFirework(a: number, b:number, color: string){
+    fireworkLoop(a, b, color)
+    fireworkLoop(-a, -b, color)
+    fireworkLoop(-a, b, color)
+    fireworkLoop(a, -b, color)
+    fireworkLoop(a, b, color)
+}
 
-fireworkLoop(2.5, 1)
-fireworkLoop(1, 2.5)
-fireworkLoop(-1, 2.5)
-fireworkLoop(1, -2.5)
-fireworkLoop(1, 2.5)
-
-fireworkLoop(-1, -2.5)
-fireworkLoop(-2.5, 1)
-fireworkLoop(-2.5, -1)
-fireworkLoop(2.5, -1)
-
-function fireworkLoop(whereX: number, whereY: number){
+function fireworkLoop(whereX: number, whereY: number, color: string) {
     for (let k = 0; k < fireworkDots; k++) {
         posX+= whereX
         posY+= whereY
         circles[k] = document.createElementNS('http://www.w3.org/2000/svg', 'circle')
-        attribute(circles[k], posX, posY, 4, 'rgba(0, 255, 255, 1)')
+        attribute(circles[k], posX, posY, 1, color)
     }
     posX = 500
     posY = 300
