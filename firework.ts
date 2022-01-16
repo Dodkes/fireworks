@@ -1,10 +1,12 @@
 const mySvg = document.querySelector('svg')
 const fireworkSpeed: number = 50
 const fireworkWidth: number = 2
-const fireworkSize: number = 20
+const fireworkSize: number = 40
 const bodySelect = document.querySelector('body')
 let x: number = 0
+let y: number = 0
 let xArray: number[] = []
+let myInterval: any
 
 class Firework {
     repeat: number
@@ -17,7 +19,7 @@ class Firework {
     constructor(tox: number, toy: number, color: string) {
         this.repeat = 0
         this.x = x
-        this.y = window.innerHeight / 3
+        this.y = y
         this.el = document.createElementNS('http://www.w3.org/2000/svg', 'circle')
         mySvg.appendChild(this.el)
         attribute(this.el, this.x, this.y, fireworkWidth, this.color)
@@ -25,7 +27,7 @@ class Firework {
         this.toy = toy
         this.color = color
     }
-    update(){
+    update() {
         if(this.repeat < fireworkSize){
             this.repeat++
             this.x += this.tox
@@ -34,28 +36,49 @@ class Firework {
             mySvg.appendChild(this.el)
             attribute(this.el, this.x, this.y, fireworkWidth, this.color)
         } else {
-            clearInterval()
+            clearInterval() //Not working - need fix
         }
     }
 }
 
+const green: string = 'rgba(0, 255, 153, 1)'
+const purple: string = 'rgba(140, 26, 255, 1)'
+const gold: string = 'rgba(255, 204, 102, 1)'
+const white: string = 'rgba(255, 255, 255, 1)'
+const blue: string = 'rgba(51, 102, 255, 1)'
+const red:  string = 'rgba(255, 102, 102, 1)'
+const colorArray: string[] = [green, purple, gold, white, blue, red]
+
+let color1: string = green
+let color2: string = white
+
 bodySelect.addEventListener('click', ()=> {
+    randomColorSelector()
     randomXCoordinateGenerator()
-    randomXCoordinateSelector()
+    randomCoordinateSelector()
     xArray = []
-    combinations(2, 2, '#ff66ff')
+    combinations(2, 2, color1)
+    combinations(-2, -2, color1)
+    combinations(2, -2, color1)
+    combinations(-2, 2, color1)
+    combinations(2.8, 0, color1)
+    combinations(0, 2.8, color1)
+    combinations(0, -2.8, color1)
+    combinations(-2.8, 0, color1)
+    combinations(2.4, 1, color2)
+    combinations(-2.4, -1, color2)
+    combinations(2.4, -1, color2)
+    combinations(-2.4, 1, color2)
+    combinations(1, 2.5, color2)
+    combinations(-1, -2.5, color2)
+    combinations(1, -2.5, color2)
+    combinations(-1, 2.5, color2)
 })
 
-//Problem je asi v tom ze taha udaje x, y z 1 objektu, nemusi to tak ale byt -> pre skusku vykonzolovat suradnice kam sa to vytvara
-//Pretoze mam vytvorene len 4 objekty, tym padom skusit aj vytvorit nove objekty pre nove ciary
-
-// const firework1 = new Firework(2, 2, '#ff66ff')
-// const firework2 = new Firework(2.8, 0, '#ff66ff')
-// const firework3 = new Firework(2.4, 1, '#ff66ff')
-// const firework4 = new Firework(1, 2.5, '#ff66ff')
-// const firework5 = new Firework(0, 2.8, '#ff66ff')
-//combinations vytvaram objekty -takze vytvart ich uz len cez tuto funkciu
-
+function randomColorSelector() {
+    color1 = colorArray[Math.floor(Math.random()* 6)] 
+    color2 = colorArray[Math.floor(Math.random()* 6)] 
+}
 
 function randomXCoordinateGenerator() {
     for (let i = 1; i < 10; i++){
@@ -64,21 +87,17 @@ function randomXCoordinateGenerator() {
     }
 }
 
-function randomXCoordinateSelector(){
+function randomCoordinateSelector() {
     let randomNumber: number = Math.floor(Math.random() * xArray.length)
     x = xArray[randomNumber]
+    let randomNumberY: number = Math.floor(Math.random()* 100)
+    y = window.innerHeight / 3 - randomNumberY
 }
 
-function combinations (positive: number, negative: number, color: string){
-    const a = new Firework(positive, -negative, color)
-    const b = new Firework(-negative, positive, color)
-    const c = new Firework(-negative, -negative, color)
-    const d = new Firework(positive, positive, color)
+function combinations (positive: number, negative: number, color: string) {
+    const createFirework = new Firework(positive, -negative, color)
     setInterval(()=>{ 
-        a.update()
-        b.update()
-        c.update()
-        d.update()
+        createFirework.update()
     }, fireworkSpeed)
 }
 
@@ -88,7 +107,7 @@ let stringR: string
 
 function attribute(element: SVGCircleElement, posX: number, posY: number, radius: number, color: string) {
     mySvg.appendChild(element)
-    if (typeof(posX) === 'number') { //TS dont allow us to assign number to string numbers
+    if (typeof(posX) === 'number') { //TS doesnt allow us to assign number to string numbers
         stringX = posX.toString()
         stringY = posY.toString()
         stringR = radius.toString()
