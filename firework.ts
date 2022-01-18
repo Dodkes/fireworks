@@ -1,6 +1,6 @@
 const mySvg = document.querySelector('svg')
-const fireworkSpeed: number = 50
-const fireworkWidth: number = 2
+const fireworkSpeed: number = 25
+const fireworkWidth: number = 1.8
 const fireworkSize: number = 40
 const bodySelect = document.querySelector('body')
 let x: number = 0
@@ -34,12 +34,21 @@ class Firework {
             this.y += this.toy
             this.el = document.createElementNS('http://www.w3.org/2000/svg', 'circle')
             mySvg.appendChild(this.el)
-            attribute(this.el, this.x, this.y, fireworkWidth, this.color)
-        } else {
-            clearInterval() //Not working - need fix
+            if(this.repeat % 2 == 0){
+                attribute(this.el, this.x, this.y, fireworkWidth, this.color)
+            } else {
+                attribute(this.el, this.x, this.y, fireworkWidth, 'black')
+            }
+            setTimeout(()=>{this.update()}, fireworkSpeed)
+        } else { //remove element
+            console.log('Firework has its max size')
+            this.el.remove()
         }
     }
 }
+
+//PROBLEM -> neviem vyberat svg elementy vytvorene od stredu aby som ich deletol
+//SOlUTION -> vyriesit tak, ze im priradit ID cez premennu i++ nasledne pre kaze ID vyvolat funkciu opacity a remove
 
 const green: string = 'rgba(0, 255, 153, 1)'
 const purple: string = 'rgba(140, 26, 255, 1)'
@@ -81,7 +90,7 @@ function randomColorSelector() {
 }
 
 function randomXCoordinateGenerator() {
-    for (let i = 1; i < 10; i++){
+    for (let i = 1; i < 10; i++) {
         let numberToPush: number = window.innerWidth / 10 * i
         xArray.push(numberToPush)
     }
@@ -95,10 +104,8 @@ function randomCoordinateSelector() {
 }
 
 function combinations (positive: number, negative: number, color: string) {
-    const createFirework = new Firework(positive, -negative, color)
-    setInterval(()=>{ 
+        const createFirework = new Firework(positive, -negative, color)
         createFirework.update()
-    }, fireworkSpeed)
 }
 
 let stringX: string
