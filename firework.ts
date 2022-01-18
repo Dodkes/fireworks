@@ -1,12 +1,11 @@
 const mySvg = document.querySelector('svg')
-const fireworkSpeed: number = 25
-const fireworkWidth: number = 1.8
-const fireworkSize: number = 40
+const fireworkSpeed: number = 15
+const fireworkWidth: number = 3
+const fireworkSize: number = 100
 const bodySelect = document.querySelector('body')
 let x: number = 0
 let y: number = 0
 let xArray: number[] = []
-let myInterval: any
 
 class Firework {
     repeat: number
@@ -29,6 +28,7 @@ class Firework {
     }
     update() {
         if(this.repeat < fireworkSize){
+            this.delete()
             this.repeat++
             this.x += this.tox
             this.y += this.toy
@@ -40,15 +40,15 @@ class Firework {
                 attribute(this.el, this.x, this.y, fireworkWidth, 'black')
             }
             setTimeout(()=>{this.update()}, fireworkSpeed)
-        } else { //remove element
-            console.log('Firework has its max size')
-            this.el.remove()
+        } else {
+        this.el.remove()
         }
     }
+    delete(){
+        this.el.style.opacity = '0'
+        this.el.remove()
+    }
 }
-
-//PROBLEM -> neviem vyberat svg elementy vytvorene od stredu aby som ich deletol
-//SOlUTION -> vyriesit tak, ze im priradit ID cez premennu i++ nasledne pre kaze ID vyvolat funkciu opacity a remove
 
 const green: string = 'rgba(0, 255, 153, 1)'
 const purple: string = 'rgba(140, 26, 255, 1)'
