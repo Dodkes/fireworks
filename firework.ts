@@ -27,7 +27,7 @@ class Firework {
         this.color = color
     }
     update() {
-        if(this.repeat < fireworkSize){
+        if (this.repeat < fireworkSize){
             this.delete()
             this.repeat++
             this.x += this.tox
@@ -36,9 +36,7 @@ class Firework {
             mySvg.appendChild(this.el)
             if(this.repeat % 2 == 0){
                 attribute(this.el, this.x, this.y, fireworkWidth, this.color)
-            } else {
-                attribute(this.el, this.x, this.y, fireworkWidth, 'black')
-            }
+            } 
             setTimeout(()=>{this.update()}, fireworkSpeed)
         } else {
         this.el.remove()
@@ -49,6 +47,33 @@ class Firework {
         this.el.remove()
     }
 }
+
+ class Bullet{
+     el: SVGCircleElement
+     x: number = window.innerWidth / 2
+     y: number = window.innerHeight
+     tox: number
+     toy: number
+     constructor(tox: number, toy: number){
+        this.tox = tox
+        this.toy = toy
+        this.el = document.createElementNS('http://www.w3.org/2000/svg', 'circle')
+        mySvg.appendChild(this.el)
+        attribute(this.el, this.x, this.y, fireworkWidth, 'gold')
+     }
+     updateBullet(){
+        this.delete()
+        this.x += this.tox
+        this.y -= this.toy
+        this.el = document.createElementNS('http://www.w3.org/2000/svg', 'circle')
+        mySvg.appendChild(this.el)
+        attribute(this.el, this.x, this.y, fireworkWidth, 'gold')
+        setTimeout(()=>{this.updateBullet()}, fireworkSpeed)
+     }
+     delete(){
+         this.el.remove()
+     }
+ }
 
 const green: string = 'rgba(0, 255, 153, 1)'
 const purple: string = 'rgba(140, 26, 255, 1)'
@@ -62,6 +87,10 @@ let color1: string = green
 let color2: string = white
 
 bodySelect.addEventListener('click', ()=> {
+    let randomX: number = randomNumber(-6, 6) //rozptyl fireworkov/bulletov
+    const bullet = new Bullet(randomX, 10)
+    bullet.updateBullet()
+
     randomColorSelector()
     randomXCoordinateGenerator()
     randomCoordinateSelector()
@@ -85,8 +114,8 @@ bodySelect.addEventListener('click', ()=> {
 })
 
 function randomColorSelector() {
-    color1 = colorArray[Math.floor(Math.random()* 6)] 
-    color2 = colorArray[Math.floor(Math.random()* 6)] 
+    color1 = colorArray[randomNumber(0, 5)]
+    color2 = colorArray[randomNumber(0, 5)]
 }
 
 function randomXCoordinateGenerator() {
@@ -97,8 +126,8 @@ function randomXCoordinateGenerator() {
 }
 
 function randomCoordinateSelector() {
-    let randomNumber: number = Math.floor(Math.random() * xArray.length)
-    x = xArray[randomNumber]
+    let randomNumberX: number = Math.floor(Math.random() * xArray.length)
+    x = xArray[randomNumberX]
     let randomNumberY: number = Math.floor(Math.random()* 100)
     y = window.innerHeight / 3 - randomNumberY
 }
@@ -124,3 +153,7 @@ function attribute(element: SVGCircleElement, posX: number, posY: number, radius
     element.setAttribute('r', stringR)
     element.setAttribute('fill', color)
 }
+
+function randomNumber(min: number, max: number) {
+    return Math.floor(Math.random() * (max - min + 1) ) + min;
+  }
