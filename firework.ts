@@ -6,6 +6,7 @@ const bodySelect = document.querySelector('body')
 let x: number = 0
 let y: number = 0
 let xArray: number[] = []
+let randomHeight: number
 
 class Firework {
     repeat: number
@@ -48,14 +49,13 @@ class Firework {
     }
 }
 
- class Bullet {
+class Bullet {
      el: SVGCircleElement
      x: number = window.innerWidth / 2
      y: number = window.innerHeight
      tox: number
      toy: number
      repeat: number
-     randomHeight: number = randomNumber(50, 80)
      constructor(tox: number, toy: number) {
         this.repeat = 0
         this.tox = tox
@@ -65,7 +65,7 @@ class Firework {
         attribute(this.el, this.x, this.y, fireworkWidth-1.5, 'gold')
      }
      updateBullet() {
-        if(this.repeat < this.randomHeight) {
+        if(this.repeat < randomHeight) {
             this.repeat++
             this.el.remove()
             this.x += this.tox
@@ -83,6 +83,14 @@ class Firework {
      }
  }
 
+function responsiveHeight(){
+    if(window.innerHeight < 800) {
+        randomHeight = randomNumber(40, 60)
+    } else {
+        randomHeight = randomNumber(50, 80)
+    }
+}
+
 const green: string = 'rgba(153, 255, 153, 1)'
 const purple: string = 'rgba(102, 0, 255, 1)'
 const gold: string = 'rgba(255, 204, 102, 1)'
@@ -95,7 +103,13 @@ let color1: string = green
 let color2: string = white
 
 bodySelect.addEventListener('click', ()=> {
-    let randomX: number = randomNumber(-7, 7) //rozptyl fireworkov/bulletov
+    responsiveHeight()
+    let randomX: number
+    if(window.innerWidth < 500) {
+        randomX = randomNumber(-3, 3)
+    } else {
+        randomX = randomNumber(-7, 7) //rozptyl fireworkov/bulletov
+    }
     const bullet = new Bullet(randomX, 10)
     bullet.updateBullet()
 })
