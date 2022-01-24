@@ -27,73 +27,81 @@ class Firework {
         this.color = color
     }
     update() {
-        if (this.repeat < fireworkSize){
+        if (this.repeat < fireworkSize) {
             this.delete()
             this.repeat++
             this.x += this.tox
             this.y += this.toy
             this.el = document.createElementNS('http://www.w3.org/2000/svg', 'circle')
             mySvg.appendChild(this.el)
-            if(this.repeat % 2 == 0){
+            if(this.repeat % 2 == 0) {
                 attribute(this.el, this.x, this.y, fireworkWidth, this.color)
             } 
-            setTimeout(()=>{this.update()}, fireworkSpeed)
+            setTimeout(()=>{ this.update() }, fireworkSpeed)
         } else {
         this.el.remove()
         }
     }
-    delete(){
+    delete() {
         this.el.style.opacity = '0'
         this.el.remove()
     }
 }
 
- class Bullet{
+ class Bullet {
      el: SVGCircleElement
      x: number = window.innerWidth / 2
      y: number = window.innerHeight
      tox: number
      toy: number
-     constructor(tox: number, toy: number){
+     repeat: number
+     randomHeight: number = randomNumber(50, 80)
+     constructor(tox: number, toy: number) {
+        this.repeat = 0
         this.tox = tox
         this.toy = toy
         this.el = document.createElementNS('http://www.w3.org/2000/svg', 'circle')
         mySvg.appendChild(this.el)
-        attribute(this.el, this.x, this.y, fireworkWidth, 'gold')
+        attribute(this.el, this.x, this.y, fireworkWidth-1.5, 'gold')
      }
-     updateBullet(){
-        this.delete()
-        this.x += this.tox
-        this.y -= this.toy
-        this.el = document.createElementNS('http://www.w3.org/2000/svg', 'circle')
-        mySvg.appendChild(this.el)
-        attribute(this.el, this.x, this.y, fireworkWidth, 'gold')
-        setTimeout(()=>{this.updateBullet()}, fireworkSpeed)
-     }
-     delete(){
-         this.el.remove()
+     updateBullet() {
+        if(this.repeat < this.randomHeight) {
+            this.repeat++
+            this.el.remove()
+            this.x += this.tox
+            this.y -= this.toy
+            this.el = document.createElementNS('http://www.w3.org/2000/svg', 'circle')
+            mySvg.appendChild(this.el)
+            attribute(this.el, this.x, this.y, fireworkWidth-1.5, 'rgb(255, 255, 102)')
+            setTimeout(()=>{ this.updateBullet() }, fireworkSpeed)
+        } else {
+            this.el.remove()
+            x = this.x
+            y = this.y
+            firework()
+        }
      }
  }
 
-const green: string = 'rgba(0, 255, 153, 1)'
-const purple: string = 'rgba(140, 26, 255, 1)'
+const green: string = 'rgba(153, 255, 153, 1)'
+const purple: string = 'rgba(102, 0, 255, 1)'
 const gold: string = 'rgba(255, 204, 102, 1)'
 const white: string = 'rgba(255, 255, 255, 1)'
 const blue: string = 'rgba(51, 102, 255, 1)'
-const red:  string = 'rgba(255, 102, 102, 1)'
+const red:  string = 'rgba(255, 0, 0, 1)'
 const colorArray: string[] = [green, purple, gold, white, blue, red]
 
 let color1: string = green
 let color2: string = white
 
 bodySelect.addEventListener('click', ()=> {
-    let randomX: number = randomNumber(-6, 6) //rozptyl fireworkov/bulletov
+    let randomX: number = randomNumber(-7, 7) //rozptyl fireworkov/bulletov
     const bullet = new Bullet(randomX, 10)
     bullet.updateBullet()
+})
 
+function firework() {
     randomColorSelector()
-    randomXCoordinateGenerator()
-    randomCoordinateSelector()
     xArray = []
     combinations(2, 2, color1)
     combinations(-2, -2, color1)
@@ -111,25 +119,10 @@ bodySelect.addEventListener('click', ()=> {
     combinations(-1, -2.5, color2)
     combinations(1, -2.5, color2)
     combinations(-1, 2.5, color2)
-})
-
+}
 function randomColorSelector() {
     color1 = colorArray[randomNumber(0, 5)]
     color2 = colorArray[randomNumber(0, 5)]
-}
-
-function randomXCoordinateGenerator() {
-    for (let i = 1; i < 10; i++) {
-        let numberToPush: number = window.innerWidth / 10 * i
-        xArray.push(numberToPush)
-    }
-}
-
-function randomCoordinateSelector() {
-    let randomNumberX: number = Math.floor(Math.random() * xArray.length)
-    x = xArray[randomNumberX]
-    let randomNumberY: number = Math.floor(Math.random()* 100)
-    y = window.innerHeight / 3 - randomNumberY
 }
 
 function combinations (positive: number, negative: number, color: string) {
@@ -156,4 +149,4 @@ function attribute(element: SVGCircleElement, posX: number, posY: number, radius
 
 function randomNumber(min: number, max: number) {
     return Math.floor(Math.random() * (max - min + 1) ) + min;
-  }
+}
